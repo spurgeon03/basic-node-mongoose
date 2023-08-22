@@ -1,7 +1,7 @@
 
 # Medium - Let’s Initialize Node.js (express) + MongoDB (mongoose)
 
-Medium: https://medium.com/@panat.siriwong/initial-node-js-express-mongodb-mongoose-b1929a858801
+Medium: https://medium.com/p/b1929a858801
 
 
 ## Authors
