@@ -7,7 +7,6 @@ const Customer = mongoose.model("Customer");
 exports.registerCustomer = async (req, res) => {
     try {
         const { email, name, age } = req.body;
-
         // Check if the customer already exists based on email
         const existingCustomer = await Customer.findOne({ email });
         if (existingCustomer) {

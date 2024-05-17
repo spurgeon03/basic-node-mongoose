@@ -1,8 +1,10 @@
-// server.js
+import express from "express";
+import mongoose from "mongoose";
+import serverless from "serverless-http";
+import {createMessage} from "./controllers/Message.js";
+/*require("./models/Customer");
+require("./models/Message");*/
 
-require("./db")
-
-const express = require('express');
 const app = express();
 const port = 3000;
 
@@ -11,9 +13,60 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //Setup routes
-app.use("/api", require("./routes/Customer"));
 
-app.listen(port, () => {
-  console.log(`Server is listening on port ${port}`);
+app.use(async (req, res, next) => {
+  try {
+    console.log('Init Connection');
+
+    const dbURI = 'mongodb+srv://crazystreamclan:4EHKlZgLukrPXbg7@cscluster.281rwfn.mongodb.net/';
+    
+    //const dbURI = 'mongodb+srv://crazystreamclan:4EHKlZgLukrPXbg7@serverlessinstance0.uz6srlw.mongodb.net/';
+
+    
+    await mongoose.connect(dbURI, { 
+      dbName: 'basic', 
+      useNewUrlParser: true, 
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000,
+      maxIdleTimeMS: 60000,
+      //ssl: true,
+    })
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(error => console.error('MongoDB connection error:', error));
+      next();
+  } catch (err) {
+      next(err);
+  }
 });
 
+const router = express.Router();
+router.get("/", async (req, res) => {
+  try {
+    return res.status(200).send(
+      `<!DOCTYPE html>
+      <html lang="en">
+
+      <head>
+          <title>Back testing</title>
+      </head>
+
+      <body>
+          <h1>What are you doing here?</h1>
+      </body>
+
+      </html>`
+    );
+  } catch (e) {
+    return res.send(e);
+  }
+});
+
+router.post("/send", createMessage);
+
+app.use("/api", router);
+
+app.listen(port, () => {
+  console.log(`Server is listening on port with love ${port}`);
+});
+
+export const handler = serverless(app);
