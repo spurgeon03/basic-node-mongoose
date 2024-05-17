@@ -22,3 +22,17 @@ export async function createMessage(req, res) {
         res.status(500).json({ message: "Internal server error" });
     }
 }
+
+export async function getMessagesByStreamerId(req, res) {
+    try {
+        const { streamerId } = req.body;
+
+        // get all messages by streamer id
+        const messages = await Message.find({ streamerId }).exec();
+
+        res.status(200).json({ messages });
+    } catch (error) {
+        console.error("Error getting messages:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
