@@ -1,9 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
-import serverless from "serverless-http";
-import {createMessage} from "./controllers/Message.js";
-/*require("./models/Customer");
-require("./models/Message");*/
+import { createMessage } from "./controllers/Message.js";
 
 const app = express();
 const port = 3000;
@@ -20,16 +17,12 @@ app.use(async (req, res, next) => {
 
     const dbURI = 'mongodb+srv://crazystreamclan:4EHKlZgLukrPXbg7@cscluster.281rwfn.mongodb.net/';
     
-    //const dbURI = 'mongodb+srv://crazystreamclan:4EHKlZgLukrPXbg7@serverlessinstance0.uz6srlw.mongodb.net/';
-
-    
     await mongoose.connect(dbURI, { 
       dbName: 'basic', 
       useNewUrlParser: true, 
       useUnifiedTopology: true,
       serverSelectionTimeoutMS: 5000,
       maxIdleTimeMS: 60000,
-      //ssl: true,
     })
     .then(() => console.log('Connected to MongoDB'))
     .catch(error => console.error('MongoDB connection error:', error));
@@ -68,5 +61,3 @@ app.use("/api", router);
 app.listen(port, () => {
   console.log(`Server is listening on port with love ${port}`);
 });
-
-export const handler = serverless(app);
