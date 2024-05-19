@@ -1,5 +1,6 @@
 // controllers/Message.js
 import { Message } from "../models/Message.js";
+import moment from "moment";
 
 // Controller function to register a new message
 export async function createMessage(req, res) {
@@ -31,6 +32,26 @@ export async function getMessagesByStreamerId(req, res) {
         const messages = await Message.find({ streamerId }).exec();
 
         res.status(200).json({ messages });
+    } catch (error) {
+        console.error("Error getting messages:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export async function getTotalMessagesByStreamerLastMont(req, res){
+    try {
+        const { streamerId } = req.body;
+
+        // get all messages by streamer id
+        const total = await Message.count({ 
+            streamerId, 
+            createdAt: {
+                $gte: moment().startOf('month').format('YYYY-MM-DD hh:mm'),
+                $lte: moment().endOf('month').format('YYYY-MM-DD hh:mm')
+            }
+        }).exec();
+
+        res.status(200).json({ total });
     } catch (error) {
         console.error("Error getting messages:", error);
         res.status(500).json({ message: "Internal server error" });

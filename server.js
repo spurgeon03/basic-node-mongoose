@@ -1,6 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
-import { createMessage, getMessagesByStreamerId } from "./controllers/Message.js";
+import { createMessage, getMessagesByStreamerId, getTotalMessagesByStreamerLastMont } from "./controllers/Message.js";
 
 const app = express();
 const port = 3000;
@@ -13,7 +13,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(async (req, res, next) => {
   try {
-    const dbURI = 'mongodb+srv://crazystreamclan:4EHKlZgLukrPXbg7@cscluster.281rwfn.mongodb.net/';
+    const dbURI = 'mongodb://root:root123@localhost:27017/';
+    //const dbURI = 'mongodb+srv://crazystreamclan:4EHKlZgLukrPXbg7@cscluster.281rwfn.mongodb.net/';
     
     await mongoose.connect(dbURI, { 
       dbName: 'basic', 
@@ -54,6 +55,7 @@ router.get("/", async (req, res) => {
 
 router.post("/send", createMessage);
 router.get("/messages", getMessagesByStreamerId);
+router.get("/total-messages", getTotalMessagesByStreamerLastMont);
 
 app.use("/api", router);
 
